@@ -26,7 +26,7 @@ plan mypatch::auto_patch (
     $post_update_failed = []
   } else {
     # Check the health of the puppet agent on all nodes
-    $agent_health = run_task('puppet_health_check::agent_health', $targets, '_catch_errors' => true)
+    $agent_health = run_task('myhealthcheck::agent_health', $targets, '_catch_errors' => true)
 
     # Pull out list of those that are ok/in error
     $puppet_healthy = $agent_health.ok_set.names
