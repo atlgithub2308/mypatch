@@ -1,11 +1,6 @@
 {
-    "description": "Wait for an approval email with a specific subject and 'Approved' in the message body.",
-    "parameters": {
-      "timeout": {
-        "type": "Integer",
-        "description": "Timeout in seconds for waiting for approval."
-      }
-    }
-  }
+    "description": "Wait for an approval email with a specific subject and 'Approved' in the message body."
+
+}
   
   
