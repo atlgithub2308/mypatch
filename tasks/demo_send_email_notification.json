@@ -1,0 +1,18 @@
+{
+    "description": "Send an email notification to a specified recipient.",
+    "parameters": {
+      "email": {
+        "type": "String",
+        "description": "Recipient email address"
+      },
+      "subject": {
+        "type": "String",
+        "description": "Subject of the email"
+      },
+      "message": {
+        "type": "String",
+        "description": "Message body of the email"
+      }
+    }
+  }
+  
