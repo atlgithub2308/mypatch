@@ -1,0 +1,26 @@
+{
+    "description": "Wait for an approval email with a specific subject and 'Approved' in the message body.",
+    "parameters": {
+      "email": {
+        "type": "String",
+        "description": "Email address to monitor for approval"
+      },
+      "password": {
+        "type": "String",
+        "description": "Password for the email account"
+      },
+      "imap_server": {
+        "type": "String",
+        "description": "IMAP server address"
+      },
+      "approval_subject": {
+        "type": "String",
+        "description": "Subject of the approval email"
+      },
+      "timeout": {
+        "type": "Integer",
+        "description": "Timeout in seconds for waiting for approval"
+      }
+    }
+  }
+  
