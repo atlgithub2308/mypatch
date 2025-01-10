@@ -9,10 +9,7 @@
         "type": "Integer",
         "description": "Timeout in seconds for waiting for approval."
       }
-    },
-    "files": [
-      "demo_await_approval.py"
-    ]
+    }
   }
   
   
