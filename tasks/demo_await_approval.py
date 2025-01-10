@@ -10,9 +10,9 @@ import json
 EMAIL = "angteckleong@gmail.com"
 PASSWORD = "wdsjdzpvjhmgceej"  # App password for Gmail
 IMAP_SERVER = "imap.gmail.com"
+APPROVAL_SUBJECT = "Approval Request"
 
 # Parameters
-APPROVAL_SUBJECT = sys.argv[1]  # Subject to search for approval emails
 TIMEOUT = int(sys.argv[2])  # Timeout in seconds
 
 # Connect to the email server
