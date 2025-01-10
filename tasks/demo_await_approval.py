@@ -11,9 +11,9 @@ EMAIL = "angteckleong@gmail.com"
 PASSWORD = "wdsjdzpvjhmgceej"  # App password for Gmail
 IMAP_SERVER = "imap.gmail.com"
 APPROVAL_SUBJECT = "Approval Request"
+TIMEOUT = 3600
 
 # Parameters
-TIMEOUT = int(sys.argv[2])  # Timeout in seconds
 
 # Connect to the email server
 try:
