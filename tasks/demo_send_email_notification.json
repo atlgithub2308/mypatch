@@ -3,11 +3,11 @@
     "parameters": {
       "email": {
         "type": "String",
-        "description": "Recipient email address"
+        "description": "Recipient email address "
       },
       "subject": {
         "type": "String",
-        "description": "Subject of the email"
+        "description": "Subject of the email "
       },
       "message": {
         "type": "String",
