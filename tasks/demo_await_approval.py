@@ -74,3 +74,5 @@ while time.time() - start_time < TIMEOUT:
 mail.logout()
 print(json.dumps({"success": False, "approved": False, "message": "Approval timeout reached"}))
 sys.exit(1)
+
+
