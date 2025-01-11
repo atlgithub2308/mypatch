@@ -11,25 +11,25 @@ EMAIL = "angteckleong@gmail.com"
 PASSWORD = "wdsjdzpvjhmgceej"  # App password for Gmail
 IMAP_SERVER = "imap.gmail.com"
 APPROVAL_SUBJECT = "Approval Request"  # Hardcoded subject
-TIMEOUT = 86400  # Hardcoded timeout (24 hours)
+TIMEOUT = 1800  # Timeout set to 30 minutes (1800 seconds)
 
 # Connect to the email server
 try:
     mail = imaplib.IMAP4_SSL(IMAP_SERVER)
     mail.login(EMAIL, PASSWORD)
-    mail.select("inbox")
 except Exception as e:
     print(json.dumps({"success": False, "message": f"Failed to connect to email server: {e}"}))
     sys.exit(1)
 
-# Function to check for approval in the latest 10 emails
+# Function to check for approval in the latest 20 emails
 def check_approval(mail):
+    mail.select("inbox")  # Refresh the inbox to include new emails
     status, messages = mail.search(None, 'ALL')
     if status != "OK":
         return False, "Failed to search emails."
 
     message_ids = messages[0].split()
-    latest_message_ids = message_ids[-10:]  # Get the latest 10 emails
+    latest_message_ids = message_ids[-20:]  # Get the latest 20 emails
 
     for msg_id in reversed(latest_message_ids):  # Iterate from the latest email
         try:
@@ -68,7 +68,7 @@ def check_approval(mail):
             # Ignore and skip problematic emails
             continue
 
-    return False, "No approval email found in the latest 10 emails."
+    return False, "No approval email found in the latest 20 emails."
 
 # Wait for approval email
 start_time = time.time()
@@ -89,6 +89,5 @@ while time.time() - start_time < TIMEOUT:
 mail.logout()
 print(json.dumps({"success": False, "approved": False, "message": "Approval timeout reached"}))
 sys.exit(1)
-
 
 
