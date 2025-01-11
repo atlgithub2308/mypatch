@@ -10,10 +10,8 @@ import json
 EMAIL = "angteckleong@gmail.com"
 PASSWORD = "wdsjdzpvjhmgceej"  # App password for Gmail
 IMAP_SERVER = "imap.gmail.com"
-APPROVAL_SUBJECT = "Approval Request"
-TIMEOUT = 3600
-
-# Parameters
+APPROVAL_SUBJECT = "Approval Request"  # Hardcoded subject
+TIMEOUT = 86400  # Hardcoded timeout (24 hours)
 
 # Connect to the email server
 try:
@@ -24,36 +22,53 @@ except Exception as e:
     print(json.dumps({"success": False, "message": f"Failed to connect to email server: {e}"}))
     sys.exit(1)
 
-# Function to check for approval
+# Function to check for approval in the latest 10 emails
 def check_approval(mail):
-    # Search for emails matching the subject
     status, messages = mail.search(None, 'ALL')
     if status != "OK":
         return False, "Failed to search emails."
 
-    for msg_id in reversed(messages[0].split()):  # Iterate from the latest email
-        status, msg_data = mail.fetch(msg_id, "(RFC822)")
-        if status != "OK":
+    message_ids = messages[0].split()
+    latest_message_ids = message_ids[-10:]  # Get the latest 10 emails
+
+    for msg_id in reversed(latest_message_ids):  # Iterate from the latest email
+        try:
+            status, msg_data = mail.fetch(msg_id, "(RFC822)")
+            if status != "OK":
+                continue
+
+            msg = email.message_from_bytes(msg_data[0][1])
+            subject = msg["Subject"]
+            body = ""
+
+            # Handle multipart emails
+            if msg.is_multipart():
+                for part in msg.walk():
+                    if part.get_content_type() == "text/plain":
+                        try:
+                            body = part.get_payload(decode=True).decode("utf-8")
+                        except (UnicodeDecodeError, AttributeError):
+                            body = None
+                        break
+            else:
+                try:
+                    body = msg.get_payload(decode=True).decode("utf-8")
+                except (UnicodeDecodeError, AttributeError):
+                    body = None
+
+            # Skip emails that cannot be decoded
+            if body is None:
+                continue
+
+            # Check for "Approved" in the email body
+            if "Approved" in body and (subject == APPROVAL_SUBJECT or subject.startswith(f"Re: {APPROVAL_SUBJECT}")):
+                return True, "Approval email found."
+
+        except Exception as e:
+            # Ignore and skip problematic emails
             continue
 
-        msg = email.message_from_bytes(msg_data[0][1])
-        subject = msg["Subject"]
-        body = ""
-
-        # Handle multipart emails
-        if msg.is_multipart():
-            for part in msg.walk():
-                if part.get_content_type() == "text/plain":
-                    body = part.get_payload(decode=True).decode()
-                    break
-        else:
-            body = msg.get_payload(decode=True).decode()
-
-        # Check for "Approved" in the email body
-        if "Approved" in body and (subject == APPROVAL_SUBJECT or subject.startswith(f"Re: {APPROVAL_SUBJECT}")):
-            return True, "Approval email found."
-
-    return False, "No approval email found."
+    return False, "No approval email found in the latest 10 emails."
 
 # Wait for approval email
 start_time = time.time()
@@ -74,5 +89,6 @@ while time.time() - start_time < TIMEOUT:
 mail.logout()
 print(json.dumps({"success": False, "approved": False, "message": "Approval timeout reached"}))
 sys.exit(1)
+
 
 
