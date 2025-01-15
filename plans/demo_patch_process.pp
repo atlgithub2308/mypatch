@@ -6,7 +6,7 @@ plan mypatch::demo_patch_process(
 ) {
   # Step 1: Send an email notification
   out::message("Sending email notification to $recipient_email...")
-  $email_task_result = run_task('mypatch::send_email_notification', $targets, {
+  $email_task_result = run_task('mypatch::demo_send_email_notification', $targets, {
     'email'   => $recipient_email,
     'subject' => $notification_subject,
     'message' => $notification_message,
@@ -21,7 +21,7 @@ plan mypatch::demo_patch_process(
 
   # Step 2: Wait for approval email
   out::message("Waiting for approval email...")
-  $approval_task_result = run_task('mypatch::await_approval', $targets)
+  $approval_task_result = run_task('mypatch::demo_await_approval', $targets)
 
   # Check the result of the approval task
   if $approval_task_result.ok and $approval_task_result['result']['approved'] {
