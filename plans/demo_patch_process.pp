@@ -11,22 +11,23 @@ plan mypatch::demo_patch_process(
     'subject' => $notification_subject,
     'message' => $notification_message,
   })
-  
-  # Check the result of the email task
+
+  # Process the result of the email task
   if $email_task_result.ok {
     out::message("Email sent successfully.")
   } else {
-    fail("Failed to send email notification: ${email_task_result.error.message}")
+    fail("Failed to send email notification: ${email_task_result[0].error.message}")
   }
 
   # Step 2: Wait for approval email
   out::message("Waiting for approval email...")
   $approval_task_result = run_task('mypatch::demo_await_approval', $targets)
 
-  # Check the result of the approval task
-  if $approval_task_result.ok and $approval_task_result['result']['approved'] {
-    out::message("Approval received: ${approval_task_result['result']['message']}")
+  # Process the result of the approval task
+  $approval_data = $approval_task_result[0].value # Get the first target's result
+  if $approval_task_result.ok and $approval_data['approved'] {
+    out::message("Approval received: ${approval_data['message']}")
   } else {
-    fail("Approval not received: ${approval_task_result['result']['message']}")
+    fail("Approval not received: ${approval_data['message']}")
   }
 }
