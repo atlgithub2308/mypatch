@@ -33,7 +33,7 @@ plan mypatch::demo_patch_process(
 
   # Step 3: Stop httpd service on sgdemorocky2.atl88.online
   out::message("Stopping httpd service on sgdemorocky2.atl88.online...")
-  $httpd_task_result = run_task('mypatch::demo_stop_httpd', 'sgdemorocky2.atl88.online')
+  $httpd_task_result = run_task('mypatch::demo_stop_httpd', $targets)
 
   # Process the result of the httpd stop task
   if $httpd_task_result.ok {
