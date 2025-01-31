@@ -2,14 +2,7 @@
     "task": {
       "name": "demo_start_mssql",
       "description": "Start MSSQLSERVER service on Windows if not running",
-      "parameters": {
-        "hostname": {
-          "type": "String",
-          "default": "sgdemowin2.atl88.online",
-          "description": "The hostname for the Windows server"
-        }
-      },
       "run": "demo_start_mssql.ps1"
     }
-  }
+}
   

@@ -1,5 +1,3 @@
-# Define default hostname if not provided
-$hostname = $args[0] ?: 'sgdemowin2.atl88.online'
 
 # Check if the MSSQLSERVER service is running
 if ((Get-Service -Name MSSQLSERVER).Status -eq 'Running') {
