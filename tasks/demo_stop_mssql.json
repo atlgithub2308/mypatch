@@ -1,0 +1,15 @@
+{
+    "task": {
+      "name": "demo_stop_mssql",
+      "description": "Stop MSSQLSERVER service on Windows if running",
+      "parameters": {
+        "hostname": {
+          "type": "String",
+          "default": "sgdemowin2.atl88.online",
+          "description": "The hostname for the Windows server"
+        }
+      },
+      "run": "demo_stop_mssql.ps1"
+    }
+  }
+  

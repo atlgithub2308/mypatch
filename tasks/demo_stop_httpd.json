@@ -1,0 +1,15 @@
+{
+    "task": {
+      "name": "demo_stop_httpd",
+      "description": "Stop httpd service on Rocky2 if running",
+      "parameters": {
+        "hostname": {
+          "type": "String",
+          "default": "sgdemorocky2.atl88.online",
+          "description": "The hostname for the Rocky2 server"
+        }
+      },
+      "run": "demo_stop_httpd.sh"
+    }
+  }
+  
