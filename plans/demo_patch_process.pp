@@ -41,4 +41,15 @@ plan mypatch::demo_patch_process(
   } else {
     fail("Failed to stop httpd service: ${httpd_task_result[0].error.message}")
   }
+
+  # Step 4: Stop MSSQL service on sgdemowin2.atl88.online
+  out::message("Stopping MSSQL service on sgdemowin2.atl88.online...")
+  $mssql_task_result = run_task('mypatch::demo_stop_mssql', 'sgdemowin2.atl88.online')
+
+  # Process the result of the httpd stop task
+  if $mssql_task_result.ok {
+    out::message("MSSQL service stopped successfully on sgdemowin2.atl88.online.")
+  } else {
+    fail("Failed to stop MSSQL service: ${mssql_task_result[0].error.message}")
+  }
 }
