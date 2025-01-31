@@ -1,8 +1,0 @@
-{
-    "version": 1,
-    "name": "stop_httpd",
-    "description": "Stop the httpd service on sgdemorocky2.atl88.online.",
-    "input_method": "environment"
-  }
-  
-  
