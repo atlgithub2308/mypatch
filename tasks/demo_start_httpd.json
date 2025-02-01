@@ -5,8 +5,8 @@
       "parameters": {
         "hostname": {
           "type": "String",
-          "default": "sgdemorocky2.atl88.online",
-          "description": "The hostname for the Rocky2 server"
+          "default": "sgdemorocky3.atl88.online",
+          "description": "The hostname for the Rocky3 server"
         }
       },
       "run": "demo_start_httpd.sh"

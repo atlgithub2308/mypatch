@@ -5,7 +5,7 @@
       "parameters": {
         "hostname": {
           "type": "String",
-          "default": "sgdemorocky2.atl88.online",
+          "default": "sgdemorocky3.atl88.online",
           "description": "The hostname for the Rocky2 server"
         }
       },

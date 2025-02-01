@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Define default hostname if not provided
+#HOSTNAME=${1:-sgdemorocky3.atl88.online}
+HOSTNAME=$PT_hostname
+
 # Check if the httpd service is running
 if ! systemctl is-active --quiet httpd; then
   # Start the httpd service
