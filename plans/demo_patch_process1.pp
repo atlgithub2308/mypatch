@@ -30,4 +30,26 @@ plan mypatch::demo_patch_process(
   } else {
     fail("Approval not received: ${approval_data['message']}")
   }
+
+  # Step 3: Stop httpd service on sgdemorocky2.atl88.online
+  out::message("Stopping httpd service on sgdemorocky3.atl88.online...")
+  $httpd_task_result = run_task('mypatch::demo_stop_httpd', 'sgdemorocky3.atl88.online')
+
+  # Process the result of the httpd stop task
+  if $httpd_task_result.ok {
+    out::message("httpd service stopped successfully on sgdemorocky3.atl88.online.")
+  } else {
+    fail("Failed to stop httpd service: ${httpd_task_result[0].error.message}")
+  }
+
+  # Step 4: Stop MSSQL service on sgdemowin2.atl88.online
+  out::message("Stopping MSSQL service on sgdemowin2.atl88.online...")
+  $mssql_task_result = run_task('mypatch::demo_stop_mssql', 'sgdemowin2.atl88.online')
+
+  # Process the result of the MSSQL stop task
+  if $mssql_task_result.ok {
+    out::message("MSSQL service stopped successfully on sgdemowin2.atl88.online.")
+  } else {
+    fail("Failed to stop MSSQL service: ${mssql_task_result[0].error.message}")
+  }
 }
