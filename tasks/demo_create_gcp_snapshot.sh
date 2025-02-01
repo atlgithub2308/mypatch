@@ -25,12 +25,12 @@ fi
 
 echo "Found boot disk: $DISK_NAME"
 
-# Create an instant snapshot
+# Create an standard snapshot
 gcloud compute snapshots create "$SNAPSHOT_NAME" \
   --source-disk="$DISK_NAME" \
   --source-disk-zone="$ZONE" \
   --project="$PROJECT" \
-  --snapshot-type=instant \
+  --snapshot-type=standard \
   --quiet
 
 echo "Snapshot $SNAPSHOT_NAME created successfully!"
