@@ -1,0 +1,21 @@
+{
+    "description": "Creates an instant snapshot of a VM's boot disk in GCP",
+    "parameters": {
+      "project": {
+        "type": "String",
+        "description": "The GCP project ID"
+      },
+      "zone": {
+        "type": "String",
+        "description": "The GCP zone where the VM is located"
+      },
+      "vmname": {
+        "type": "String",
+        "description": "The GCP VM name"
+      },
+      "snapshotname": {
+        "type": "String",
+        "description": "The GCP VM instant snapshot name"
+      }
+    }
+  }
