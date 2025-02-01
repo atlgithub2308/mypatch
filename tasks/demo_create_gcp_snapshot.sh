@@ -30,7 +30,7 @@ gcloud compute snapshots create "$SNAPSHOT_NAME" \
   --source-disk="$DISK_NAME" \
   --source-disk-zone="$ZONE" \
   --project="$PROJECT" \
-  --snapshot-type=standard \
+  --snapshot-type=STANDARD \
   --quiet
 
 echo "Snapshot $SNAPSHOT_NAME created successfully!"
