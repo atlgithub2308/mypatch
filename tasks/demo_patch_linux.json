@@ -1,0 +1,10 @@
+{
+    "description": "Patches a specific package on Rocky Linux",
+    "parameters": {
+      "package": {
+        "type": "String",
+        "description": "The package to update"
+      }
+    }
+  }
+  
