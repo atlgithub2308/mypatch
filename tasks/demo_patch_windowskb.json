@@ -1,0 +1,12 @@
+{
+    "version": 1,
+    "name": "demo_patch_windowskb",
+    "parameters": {
+      "kb_number": {
+        "type": "String",
+        "description": "The KB number to apply."
+      }
+    },
+    "description": "Puppet task to apply a specified Windows KB update."
+  }
+  
