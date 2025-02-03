@@ -8,7 +8,7 @@ PROJECT=$PT_project
 ZONE=$PT_zone
 VMNAME=$PT_vmname
 SNAPSHOTNAME=$PT_snapshotname
-NEW_DISK_NAME="${VMNAME}-snapshot-disk1"
+NEW_DISK_NAME="${SNAPSHOTNAME}-disk"
 
 # Ensure gcloud is in PATH
 export PATH=$PATH:/usr/local/google-cloud-sdk/bin
