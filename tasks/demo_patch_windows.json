@@ -1,0 +1,11 @@
+{
+    "description": "Patch a Windows system using Chocolatey with a specified package.",
+    "parameters": {
+      "package": {
+        "description": "The Chocolatey package to install or update.",
+        "type": "String"
+      }
+    },
+    "supports_noop": false
+  }
+  
