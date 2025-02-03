@@ -3,7 +3,9 @@ param (
 )
 
 Write-Host "Checking if package '$package' is installed..."
-$installed_packages = choco list --limit-output | ForEach-Object { $_.ToLower() }  # Convert to lowercase
+
+# Get installed packages and remove versions
+$installed_packages = choco list --limit-output | ForEach-Object { ($_ -split '\|')[0].ToLower() }  
 
 # Convert input package name to lowercase for case-insensitive match
 $package_lower = $package.ToLower()
