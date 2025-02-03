@@ -4,7 +4,8 @@ param (
 
 Write-Host "Checking if package '$package' is installed..."
 $installed_packages = choco list --local-only | Out-String
-if ($installed_packages -match "^$package\s") {
+
+if ($installed_packages -match "(?i)^$package\s") {
     Write-Host "Package '$package' is installed. Proceeding with update..."
     choco upgrade $package -y --ignore-checksums
 
