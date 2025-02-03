@@ -25,3 +25,4 @@ Write-Host "Automated installation requires Windows Update or direct MSU file."
 # Start-Process -FilePath "wusa.exe" -ArgumentList "$msu_path /quiet /norestart" -Wait
 
 exit 0
+

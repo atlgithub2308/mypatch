@@ -25,3 +25,4 @@ if ($installed) {
 
 Write-Host "Chocolatey package $package has been updated."
 exit 0
+
