@@ -1,8 +1,8 @@
 {
-    "description": "Patch a Windows system using Chocolatey with a specified package.",
+    "description": "Update a specific package using Chocolatey on Windows.",
     "parameters": {
       "package": {
-        "description": "The Chocolatey package to install or update.",
+        "description": "The Chocolatey package to update (e.g., googlechrome).",
         "type": "String"
       }
     },
