@@ -3,9 +3,12 @@ param (
 )
 
 Write-Host "Checking if package '$package' is installed..."
-$installed_packages = choco list --local-only | Out-String
+$installed_packages = choco list --limit-output | ForEach-Object { $_.ToLower() }  # Convert to lowercase
 
-if ($installed_packages -match "(?i)^$package\s") {
+# Convert input package name to lowercase for case-insensitive match
+$package_lower = $package.ToLower()
+
+if ($installed_packages -contains $package_lower) {
     Write-Host "Package '$package' is installed. Proceeding with update..."
     choco upgrade $package -y --ignore-checksums
 
@@ -18,5 +21,6 @@ if ($installed_packages -match "(?i)^$package\s") {
     }
 } else {
     Write-Host "Error: Package '$package' is not installed. Please install it first."
+    Write-Host "Installed packages list: `n$installed_packages"
     exit 1
 }
