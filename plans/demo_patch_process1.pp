@@ -6,7 +6,8 @@ plan mypatch::demo_patch_process(
   String $gcp_project,
   String $gcp_zone,
   String $vmname,
-  String $snapshotname
+  String $snapshotname,
+  String $package_name
 ) {
   # Step 1: Send an email notification
   out::message("Sending email notification to $recipient_email...")
@@ -66,5 +67,17 @@ plan mypatch::demo_patch_process(
     out::message("Snapshot $snapshotname created successfully for VM $vmname.")
   } else {
     fail("Failed to create snapshot: ${snapshot_task_result[0].error.message}")
+  }
+
+  # Step 6: Patch the specified package on Rocky Linux
+  out::message("Patching package $package_name on sgdemorocky3.atl88.online...")
+  $patch_task_result = run_task('mypatch::demo_patch_linux', 'sgdemorocky3.atl88.online', {
+    'package' => $package_name
+  })
+
+  if $patch_task_result.ok {
+    out::message("Package $package_name patched successfully on sgdemorocky3.atl88.online.")
+  } else {
+    fail("Failed to patch package $package_name: ${patch_task_result[0].error.message}")
   }
 }

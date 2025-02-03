@@ -7,7 +7,8 @@ plan mypatch::demo_patch_process(
   String $gcp_zone,
   String $vmname,
   String $snapshotname,
-  String $package_name
+  String $package_name,
+  String $windows_package
 ) {
   # Step 1: Send an email notification
   out::message("Sending email notification to $recipient_email...")
@@ -79,5 +80,17 @@ plan mypatch::demo_patch_process(
     out::message("Package $package_name patched successfully on sgdemorocky3.atl88.online.")
   } else {
     fail("Failed to patch package $package_name: ${patch_task_result[0].error.message}")
+  }
+
+  # Step 7: Patch the specified package on Windows VM sgdemowin2.atl88.online using Chocolatey
+  out::message("Patching package $windows_package on sgdemowin2.atl88.online using Chocolatey...")
+  $windows_patch_task_result = run_task('mypatch::demo_patch_windows', 'sgdemowin2.atl88.online', {
+    'package' => $windows_package
+  })
+
+  if $windows_patch_task_result.ok {
+    out::message("Package $windows_package patched successfully on sgdemowin2.atl88.online.")
+  } else {
+    fail("Failed to patch package $windows_package on sgdemowin2.atl88.online: ${windows_patch_task_result[0].error.message}")
   }
 }
