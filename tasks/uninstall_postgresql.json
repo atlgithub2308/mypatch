@@ -1,5 +1,5 @@
 {
   "description": "Uninstall PostgreSQL client and server and remove data directory",
   "supports_noop": false,
-  "input_method": "none"
+  "input_method": "bash"
 }
