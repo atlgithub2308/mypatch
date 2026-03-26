@@ -50,14 +50,11 @@ plan mypatch::demo_patch_process_new(
       email   => $recipient_email,
       subject => $notification_subject,
       message => $notification_message,
-      noop    => $noop,
   })
 
   # Step 2: Wait for approval
   out::message('Step 2: Waiting for approval...')
-  $approval_result = run_task('mypatch::demo_await_approval', $targets, {
-      noop => $noop,
-  })
+  $approval_result = run_task('mypatch::demo_await_approval', $targets)
   $approval_data = $approval_result.first.value
   if $approval_data['approved'] != true {
     fail("Approval denied: ${approval_data['message']}")
@@ -67,13 +64,13 @@ plan mypatch::demo_patch_process_new(
   # Step 3: Stop httpd on Rocky Linux 
   out::message("Step 3: Stopping httpd on ${rocky_target}...")
   run_task('mypatch::demo_stop_httpd', $rocky_target, {
-      noop => $noop,
+      hostname => $rocky_target,
   })
 
   # Step 4: Stop MSSQL on Windows
   out::message("Step 4: Stopping MSSQL on ${windows_target}...")
   run_task('mypatch::demo_stop_mssql', $windows_target, {
-      noop => $noop,
+      hostname => $windows_target,
   })
 
   # Step 5: Create GCP snapshot
@@ -83,21 +80,18 @@ plan mypatch::demo_patch_process_new(
       zone         => $gcp_zone,
       vmname       => $vmname,
       snapshotname => $snapshotname,
-      noop         => $noop,
   })
 
   # Step 6: Patch Linux package
   out::message("Step 6: Patching package ${package_name} on ${rocky_target}...")
   run_task('mypatch::demo_patch_linux', $rocky_target, {
       package => $package_name,
-      noop    => $noop,
   })
 
   # Step 7: Patch Windows package
   out::message("Step 7: Patching package ${windows_package} on ${windows_target}...")
   run_task('mypatch::demo_patch_windows', $windows_target, {
       package => $windows_package,
-      noop    => $noop,
   })
 
   out::message('Demo patch process completed successfully.')
