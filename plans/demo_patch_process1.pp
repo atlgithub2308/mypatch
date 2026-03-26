@@ -1,4 +1,4 @@
-plan mypatch::demo_patch_process(
+plan mypatch::demo_patch_process1(
   TargetSpec $targets,
   String $recipient_email,
   String $notification_subject,
