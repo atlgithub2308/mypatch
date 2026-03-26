@@ -64,7 +64,7 @@ plan mypatch::demo_patch_process_new(
   }
   out::message("Approval received: ${approval_data['message']}")
 
-  # Step 3: Stop httpd on Rocky Linux
+  # Step 3: Stop httpd on Rocky Linux 
   out::message("Step 3: Stopping httpd on ${rocky_target}...")
   run_task('mypatch::demo_stop_httpd', $rocky_target, {
       noop => $noop,
