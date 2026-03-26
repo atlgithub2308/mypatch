@@ -9,8 +9,6 @@
 #   The Rocky Linux target (default: sgdemorocky3.atl88.online).
 # @param $windows_target
 #   The Windows target (default: sgdemowin2.atl88.online).
-# @param String[1] $notification_subject
-#   Subject line for notification email.
 # @param String[1] $notification_message
 #   Message body for notification email.
 # @param String[1] $vmname
@@ -31,7 +29,6 @@ plan mypatch::demo_patch_process_new(
   $targets,
   $rocky_target   = 'sgdemorocky3.atl88.online',
   $windows_target = 'sgdemowin2.atl88.online',
-  String[1] $notification_subject,
   String[1] $notification_message,
   String[1] $vmname,
   String[1] $snapshotname,
@@ -43,6 +40,7 @@ plan mypatch::demo_patch_process_new(
   $recipient_email = 'angteckleong@gmail.com'
   $gcp_project = 'atldemo'
   $gcp_zone = 'asia-southeast1-a'
+  $notification_subject = 'Approval Request'
 
   # Step 1: Send email notification
   out::message("Step 1: Sending email notification to ${recipient_email}...")
