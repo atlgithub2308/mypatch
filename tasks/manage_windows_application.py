@@ -183,28 +183,17 @@ def action_uninstall(application):
     }
 
 
-def action_check_update(application, check_pinned=False):
-    if not application:
-        return {
-            "success": False,
-            "message": "The 'application' parameter is required for check-update action.",
-            "action": "check-update",
-            "application": "",
-            "version": "",
-            "exit_code": 1,
-            "stdout": "",
-            "stderr": "",
-            "command": "",
-        }
-    
-    command = ["choco", "outdated", application]
+def action_check_update(application=None, check_pinned=False):
+    command = ["choco", "outdated"]
+    if application:
+        command.append(application)
     if not check_pinned:
         command.append("--ignore-pinned")
     
     result = run_choco_command(command)
     success = result["exit_code"] == 0
     
-    update_info = None
+    updates = []
     if success:
         # Parse the output to extract version information
         # Output format: package_name|current_version|available_version|pinned?
@@ -214,23 +203,22 @@ def action_check_update(application, check_pinned=False):
                 continue
             parts = line.split("|")
             if len(parts) >= 3:
-                update_info = {
+                updates.append({
                     "name": parts[0].strip(),
                     "current_version": parts[1].strip(),
                     "available_version": parts[2].strip(),
                     "pinned": parts[3].strip() if len(parts) >= 4 else "False",
-                }
-                break
+                })
     
     output = {
         "success": success,
         "message": (
-            "Update available for application." if (success and update_info)
-            else "No updates available for application." if (success and not update_info)
+            f"{len(updates)} package(s) have available updates." if (success and updates)
+            else "No updates available for any packages." if (success and not updates)
             else f"Chocolatey check-update failed with exit code {result['exit_code']}."
         ),
         "action": "check-update",
-        "application": application,
+        "application": application or "",
         "version": "",
         "exit_code": result["exit_code"],
         "stdout": result["stdout"],
@@ -238,8 +226,8 @@ def action_check_update(application, check_pinned=False):
         "command": result["command"],
     }
     
-    if update_info:
-        output["data"] = update_info
+    if updates:
+        output["data"] = updates
     
     return output
 

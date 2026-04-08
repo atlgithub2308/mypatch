@@ -16,7 +16,7 @@
       "type": "Enum['install','uninstall','list','check-update']"
     },
     "application": {
-      "description": "Name of the Chocolatey package. Required for 'install' and 'uninstall' actions, ignored for 'list'.",
+      "description": "Name of the Chocolatey package. Required for 'install' and 'uninstall' actions, optional for 'check-update' action (if omitted, checks all packages for updates).",
       "type": "Optional[String[1]]"
     },
     "version": {

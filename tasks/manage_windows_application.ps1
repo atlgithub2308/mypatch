@@ -147,13 +147,11 @@ try {
   }
 
   elseif ($action -eq 'check-update') {
-    # Check for updates for a specific application
-    if (-not $application) {
-      Write-TaskResult $false 'The ''application'' parameter is required for check-update action.' $action '' '' 1 '' '' ''
-      exit 1
+    # Check for updates for a specific application or all applications
+    $arguments = @('outdated')
+    if ($application) {
+      $arguments += $application
     }
-
-    $arguments = @('outdated', $application)
     if (-not $check_pinned) {
       $arguments += '--ignore-pinned'
     }
@@ -166,7 +164,7 @@ try {
     
     if ($exit_code -eq 0) {
       # Parse the output to extract version information
-      $update_info = $null
+      $updates = @()
       foreach ($line in $outputLines) {
         # Output format: package_name|current_version|available_version|pinned?
         if ($line -match '^\s*$' -or $line -match 'packages? (installed|outdated)') {
@@ -174,23 +172,22 @@ try {
         }
         $parts = $line -split '\|'
         if ($parts.Count -ge 3) {
-          $update_info = @{
+          $updates += @{
             name = $parts[0].Trim()
             current_version = $parts[1].Trim()
             available_version = $parts[2].Trim()
             pinned = if ($parts.Count -ge 4) { $parts[3].Trim() } else { 'False' }
           }
-          break
         }
       }
 
-      if ($update_info) {
-        Write-TaskResult $true 'Update available for application.' $action $application '' $exit_code $stdout $stderr $command $update_info
+      if ($updates.Count -gt 0) {
+        Write-TaskResult $true "$($updates.Count) package(s) have available updates." $action $application '' $exit_code $stdout $stderr $command $updates
       } else {
-        Write-TaskResult $true 'No updates available for application.' $action $application '' $exit_code $stdout $stderr $command
+        Write-TaskResult $true 'No updates available for any packages.' $action $application '' $exit_code $stdout $stderr $command
       }
     } else {
-      if ($stdout -match 'No packages found for') {
+      if ($application -and $stdout -match 'No packages found for') {
         Write-TaskResult $false "Package ''$application'' not found on this system." $action $application '' $exit_code $stdout $stderr $command
       } else {
         Write-TaskResult $false "Chocolatey check-update failed with exit code $exit_code." $action $application '' $exit_code $stdout $stderr $command
