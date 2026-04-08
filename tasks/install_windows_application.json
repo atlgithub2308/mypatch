@@ -2,6 +2,10 @@
   "description": "Install a Windows application through Chocolatey.",
   "implementations": [
     {
+      "name": "install_windows_application.ps1",
+      "requirements": ["powershell"]
+    },
+    {
       "name": "install_windows_application.py",
       "requirements": ["python3"]
     }
