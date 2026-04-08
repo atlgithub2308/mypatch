@@ -70,7 +70,7 @@ def run_choco_command(command_args):
 
 
 def action_list():
-    command = ["choco", "list", "--local-only"]
+    command = ["choco", "list"]
     result = run_choco_command(command)
     
     if result["exit_code"] == 0:

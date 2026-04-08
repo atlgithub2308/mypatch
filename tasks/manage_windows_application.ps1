@@ -49,8 +49,8 @@ function Write-TaskResult(
 try {
   if ($action -eq 'list') {
     # List all installed Chocolatey packages
-    $command = 'choco list --local-only'
-    $outputLines = & choco list --local-only 2>&1
+    $command = 'choco list'
+    $outputLines = & choco list 2>&1
     $exit_code = $LASTEXITCODE
     $stdout = @($outputLines) -join "`n"
     $stderr = ''
