@@ -1,0 +1,27 @@
+{
+  "description": "Manage Windows applications through Chocolatey. Supports install, uninstall, and list actions.",
+  "implementations": [
+    {
+      "name": "manage_windows_application.ps1",
+      "requirements": ["powershell"]
+    },
+    {
+      "name": "manage_windows_application.py",
+      "requirements": ["python3"]
+    }
+  ],
+  "parameters": {
+    "action": {
+      "description": "The action to perform: 'install', 'uninstall', or 'list'. The 'list' action lists all installed Chocolatey packages and requires no other parameters.",
+      "type": "Enum['install','uninstall','list']"
+    },
+    "application": {
+      "description": "Name of the Chocolatey package. Required for 'install' and 'uninstall' actions, ignored for 'list'.",
+      "type": "Optional[String[1]]"
+    },
+    "version": {
+      "description": "Optional package version to install. Only used with the 'install' action. If omitted, the latest version is installed.",
+      "type": "Optional[String[1]]"
+    }
+  }
+}
