@@ -1,7 +1,7 @@
 [CmdletBinding()]
 Param(
   [Parameter(Mandatory = $True)]
-  [ValidateSet('install', 'uninstall', 'list')]
+  [ValidateSet('install', 'uninstall', 'list', 'check-update')]
   [String]$action,
 
   [Parameter(Mandatory = $False)]
@@ -9,6 +9,9 @@ Param(
 
   [Parameter(Mandatory = $False)]
   [String]$version,
+
+  [Parameter(Mandatory = $False)]
+  [Boolean]$check_pinned = $false,
 
   [String]$_installdir
 )
@@ -140,6 +143,59 @@ try {
     }
 
     Write-TaskResult $success $message $action $application '' $exit_code $stdout $stderr $command
+    exit $exit_code
+  }
+
+  elseif ($action -eq 'check-update') {
+    # Check for updates for a specific application
+    if (-not $application) {
+      Write-TaskResult $false 'The ''application'' parameter is required for check-update action.' $action '' '' 1 '' '' ''
+      exit 1
+    }
+
+    $arguments = @('outdated', $application)
+    if (-not $check_pinned) {
+      $arguments += '--ignore-pinned'
+    }
+    $command = "choco $($arguments -join ' ')"
+
+    $outputLines = & choco @arguments 2>&1
+    $exit_code = $LASTEXITCODE
+    $stdout = @($outputLines) -join "`n"
+    $stderr = ''
+    
+    if ($exit_code -eq 0) {
+      # Parse the output to extract version information
+      $update_info = $null
+      foreach ($line in $outputLines) {
+        # Output format: package_name|current_version|available_version|pinned?
+        if ($line -match '^\s*$' -or $line -match 'packages? (installed|outdated)') {
+          continue
+        }
+        $parts = $line -split '\|'
+        if ($parts.Count -ge 3) {
+          $update_info = @{
+            name = $parts[0].Trim()
+            current_version = $parts[1].Trim()
+            available_version = $parts[2].Trim()
+            pinned = if ($parts.Count -ge 4) { $parts[3].Trim() } else { 'False' }
+          }
+          break
+        }
+      }
+
+      if ($update_info) {
+        Write-TaskResult $true 'Update available for application.' $action $application '' $exit_code $stdout $stderr $command $update_info
+      } else {
+        Write-TaskResult $true 'No updates available for application.' $action $application '' $exit_code $stdout $stderr $command
+      }
+    } else {
+      if ($stdout -match 'No packages found for') {
+        Write-TaskResult $false "Package ''$application'' not found on this system." $action $application '' $exit_code $stdout $stderr $command
+      } else {
+        Write-TaskResult $false "Chocolatey check-update failed with exit code $exit_code." $action $application '' $exit_code $stdout $stderr $command
+      }
+    }
     exit $exit_code
   }
 }

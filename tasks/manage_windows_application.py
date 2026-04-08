@@ -183,11 +183,73 @@ def action_uninstall(application):
     }
 
 
+def action_check_update(application, check_pinned=False):
+    if not application:
+        return {
+            "success": False,
+            "message": "The 'application' parameter is required for check-update action.",
+            "action": "check-update",
+            "application": "",
+            "version": "",
+            "exit_code": 1,
+            "stdout": "",
+            "stderr": "",
+            "command": "",
+        }
+    
+    command = ["choco", "outdated", application]
+    if not check_pinned:
+        command.append("--ignore-pinned")
+    
+    result = run_choco_command(command)
+    success = result["exit_code"] == 0
+    
+    update_info = None
+    if success:
+        # Parse the output to extract version information
+        # Output format: package_name|current_version|available_version|pinned?
+        for line in result["stdout"].split("\n"):
+            line = line.strip()
+            if not line or "packages" in line:
+                continue
+            parts = line.split("|")
+            if len(parts) >= 3:
+                update_info = {
+                    "name": parts[0].strip(),
+                    "current_version": parts[1].strip(),
+                    "available_version": parts[2].strip(),
+                    "pinned": parts[3].strip() if len(parts) >= 4 else "False",
+                }
+                break
+    
+    output = {
+        "success": success,
+        "message": (
+            "Update available for application." if (success and update_info)
+            else "No updates available for application." if (success and not update_info)
+            else f"Chocolatey check-update failed with exit code {result['exit_code']}."
+        ),
+        "action": "check-update",
+        "application": application,
+        "version": "",
+        "exit_code": result["exit_code"],
+        "stdout": result["stdout"],
+        "stderr": result["stderr"],
+        "command": result["command"],
+    }
+    
+    if update_info:
+        output["data"] = update_info
+    
+    return output
+
+
 def main():
     params = read_parameters()
     action = params.get("action")
     application = params.get("application")
     version = params.get("version")
+    check_pinned = params.get("check_pinned", False)
 
     if not action:
         result = {
@@ -207,10 +269,12 @@ def main():
         result = action_install(application, version)
     elif action == "uninstall":
         result = action_uninstall(application)
+    elif action == "check-update":
+        result = action_check_update(application, check_pinned)
     else:
         result = {
             "success": False,
-            "message": f"Unknown action '{action}'. Supported actions: install, uninstall, list.",
+            "message": f"Unknown action '{action}'. Supported actions: install, uninstall, list, check-update.",
             "action": action,
             "application": application,
             "version": version,
