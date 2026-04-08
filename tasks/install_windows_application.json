@@ -1,0 +1,19 @@
+{
+  "description": "Install a Windows application through Chocolatey.",
+  "implementations": [
+    {
+      "name": "install_windows_application.py",
+      "requirements": ["python3"]
+    }
+  ],
+  "parameters": {
+    "application": {
+      "description": "Name of the Chocolatey package to install.",
+      "type": "String[1]"
+    },
+    "version": {
+      "description": "Optional package version to install. If omitted, the latest version is installed.",
+      "type": "Optional[String[1]]"
+    }
+  }
+}
