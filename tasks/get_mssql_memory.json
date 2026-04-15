@@ -1,0 +1,7 @@
+{
+    "task": {
+      "name": "get_mssql_memory",
+      "description": "Retrieve MSSQL min and max server memory configuration on Windows.",
+      "run": "get_mssql_memory.ps1"
+    }
+}
