@@ -1,0 +1,60 @@
+{
+  "description": "Bulk create VMs in GCP",
+  "parameters": {
+    "project": {
+      "type": "String",
+      "description": "The GCP project ID",
+      "default": "atldemo"
+    },
+    "zone": {
+      "type": "Enum['asia-southeast1-a', 'asia-southeast1-b', 'asia-southeast1-c']",
+      "description": "The GCP zone where VMs will be created",
+      "default": "asia-southeast1-a"
+    },
+    "vm_prefix": {
+      "type": "String",
+      "description": "Prefix for VM names, VMs will be named as prefix-1, prefix-2, etc.",
+      "default": "demo-vm"
+    },
+    "count": {
+      "type": "Integer",
+      "description": "Number of VMs to create",
+      "default": 1
+    },
+    "machine_type": {
+      "type": "Enum['n1-standard-1', 'n1-standard-2', 'n2-standard-2', 'e2-micro']",
+      "description": "Machine type for the VMs",
+      "default": "n1-standard-1"
+    },
+    "image_family": {
+      "type": "Enum['ubuntu-2004-lts', 'ubuntu-2204-lts', 'centos-7', 'centos-8', 'debian-10', 'debian-11', 'windows-server-2019-dc', 'windows-server-2022-dc']",
+      "description": "Image family for the operating system",
+      "default": "ubuntu-2004-lts"
+    },
+    "image_project": {
+      "type": "Enum['ubuntu-os-cloud', 'centos-cloud', 'debian-cloud', 'windows-cloud']",
+      "description": "Project containing the image",
+      "default": "ubuntu-os-cloud"
+    },
+    "network": {
+      "type": "String",
+      "description": "Network name for the VMs",
+      "default": "default"
+    },
+    "subnet": {
+      "type": "String",
+      "description": "Subnet name for the VMs",
+      "default": "default"
+    },
+    "disk_size_gb": {
+      "type": "Optional[Integer]",
+      "description": "Boot disk size in GB, default 10",
+      "default": 10
+    },
+    "disk_type": {
+      "type": "Optional[String]",
+      "description": "Boot disk type, e.g., pd-standard, default pd-standard",
+      "default": "pd-standard"
+    }
+  }
+}
