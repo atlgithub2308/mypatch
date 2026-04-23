@@ -1,0 +1,57 @@
+{
+  "description": "Retrieve the MOTD/banner from a NETCONF-enabled network device",
+  "input_method": "stdin",
+  "remote": false,
+  "parameters": {
+    "host": {
+      "type": "Optional[String]",
+      "description": "Device host or IP address when not using _target"
+    },
+    "port": {
+      "type": "Optional[Integer]",
+      "description": "NETCONF SSH port",
+      "default": 830
+    },
+    "username": {
+      "type": "Optional[String]",
+      "description": "NETCONF username when not using _target"
+    },
+    "password": {
+      "type": "Optional[Sensitive[String]]",
+      "description": "NETCONF password when not using _target"
+    },
+    "private_key": {
+      "type": "Optional[String]",
+      "description": "Private key file or key data when not using _target"
+    },
+    "install_dependencies": {
+      "type": "Boolean",
+      "description": "Allow the task to install required Python dependencies if missing",
+      "default": true
+    },
+    "host_key_check": {
+      "type": "Optional[Boolean]",
+      "description": "Verify host key for NETCONF SSH",
+      "default": true
+    },
+    "device_type": {
+      "type": "Enum['cisco_ios', 'cisco_xe', 'cisco_xr', 'juniper_junos', 'generic']",
+      "description": "Device type used to select the NETCONF filter",
+      "default": "generic"
+    },
+    "source": {
+      "type": "Enum['running', 'candidate', 'startup']",
+      "description": "NETCONF datastore to query",
+      "default": "running"
+    },
+    "filter": {
+      "type": "Optional[String]",
+      "description": "Custom NETCONF subtree filter to override the default device filter"
+    },
+    "timeout": {
+      "type": "Integer",
+      "description": "NETCONF connection timeout in seconds",
+      "default": 30
+    }
+  }
+}
