@@ -29,7 +29,7 @@
     "image_family": {
       "type": "Enum['ubuntu-2004-lts', 'ubuntu-2204-lts', 'centos-7', 'centos-8', 'debian-10', 'debian-11', 'windows-server-2019-dc', 'windows-server-2022-dc']",
       "description": "Image family for the operating system",
-      "default": "ubuntu-2004-lts"
+      "default": "ubuntu-2204-lts"
     },
     "image_project": {
       "type": "Enum['ubuntu-os-cloud', 'centos-cloud', 'debian-cloud', 'windows-cloud']",
