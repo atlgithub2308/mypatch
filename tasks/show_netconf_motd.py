@@ -141,7 +141,7 @@ def read_netconf_message(channel):
     while True:
         chunk = channel.recv(4096)
         if not chunk:
-            raise RuntimeError('Connection closed by server')
+            raise RuntimeError('Connection closed by server - NETCONF subsystem may not be available on the device')
         data += chunk
         if b']]>]]>' in data:
             msg, _ = data.split(b']]>]]>', 1)
