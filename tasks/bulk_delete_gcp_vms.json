@@ -1,0 +1,29 @@
+{
+  "description": "Bulk delete VMs in GCP",
+  "parameters": {
+    "project": {
+      "type": "String",
+      "description": "The GCP project ID",
+      "default": "atldemo"
+    },
+    "zone": {
+      "type": "Enum['asia-southeast1-a', 'asia-southeast1-b', 'asia-southeast1-c']",
+      "description": "The GCP zone where VMs are located",
+      "default": "asia-southeast1-a"
+    },
+    "vmnames": {
+      "type": "String",
+      "description": "VM names to delete, space-separated"
+    },
+    "service_account_key_file": {
+      "type": "String",
+      "description": "Path to the GCP service account key file",
+      "default": "/etc/gcloud/service-account-key.json"
+    },
+    "gcloud_bin_path": {
+      "type": "String",
+      "description": "Path to the gcloud binary directory",
+      "default": "/usr/local/google-cloud-sdk/bin"
+    }
+  }
+}
