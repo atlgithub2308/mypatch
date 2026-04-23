@@ -153,8 +153,17 @@ def get_config_netconf(host, port, username, password, timeout, filter_xml=None)
 
     try:
         transport = client.get_transport()
+        if not transport:
+            raise RuntimeError('Failed to get transport from SSH connection')
+        
         channel = transport.open_session()
-        channel.invoke_subsystem('netconf')
+        if not channel:
+            raise RuntimeError('Failed to open session channel')
+        
+        try:
+            channel.invoke_subsystem('netconf')
+        except Exception as e:
+            raise RuntimeError(f'Failed to invoke netconf subsystem: {type(e).__name__}: {e}')
 
         send_netconf_hello(channel)
         server_hello = read_netconf_message(channel)
@@ -166,6 +175,8 @@ def get_config_netconf(host, port, username, password, timeout, filter_xml=None)
 
         return config_response
 
+    except Exception as e:
+        raise RuntimeError(f'NETCONF error during get_config: {e}')
     finally:
         client.close()
 
