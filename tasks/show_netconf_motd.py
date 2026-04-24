@@ -4,6 +4,7 @@ import json
 import socket
 import sys
 import xml.etree.ElementTree as ET
+import time
 
 
 def load_stdin_parameters():
@@ -141,23 +142,33 @@ def send_netconf_hello(channel):
 
 def read_netconf_message(channel):
     data = b''
-    while True:
+    max_wait = 10  # seconds
+    elapsed = 0
+    
+    while elapsed < max_wait:
         try:
             chunk = channel.recv(4096)
-        except socket.timeout:
-            raise TimeoutError(f'Timeout waiting for NETCONF message. Received so far: {data[:200]}')
-        
-        if not chunk:
-            # Check if channel is still open
-            if channel.closed or channel.exit_status_ready():
-                raise RuntimeError(f'NETCONF channel closed by server (exit code: {channel.recv_exit_status()}). No response received. Device may not support NETCONF or subsystem not available.')
+            if chunk:
+                data += chunk
+                if b']]>]]>' in data:
+                    msg, _ = data.split(b']]>]]>', 1)
+                    return msg.decode('utf-8', errors='ignore')
+                elapsed = 0  # Reset timer on successful read
             else:
-                raise RuntimeError('Connection closed while reading NETCONF message')
-        
-        data += chunk
-        if b']]>]]>' in data:
-            msg, _ = data.split(b']]>]]>', 1)
-            return msg.decode('utf-8', errors='ignore')
+                # Empty read, check if channel is closed
+                if channel.closed or channel.exit_status_ready():
+                    raise RuntimeError(f'NETCONF channel closed. Partial data: {data[:200] if data else "none"}')
+                time.sleep(0.05)
+                elapsed += 0.05
+        except socket.timeout:
+            time.sleep(0.05)
+            elapsed += 0.05
+            if elapsed >= max_wait:
+                raise TimeoutError(f'NETCONF message timeout after {max_wait}s. Partial data: {data[:200]}')
+        except Exception as e:
+            raise RuntimeError(f'Error reading NETCONF message: {e}. Data so far: {data[:200]}')
+    
+    raise TimeoutError(f'NETCONF message read timeout. Partial data received: {data[:200]}')
 
 
 def get_config_netconf(host, port, username, password, timeout, filter_xml=None):
@@ -176,15 +187,18 @@ def get_config_netconf(host, port, username, password, timeout, filter_xml=None)
         
         try:
             channel.invoke_subsystem('netconf')
+            time.sleep(0.5)  # Wait for subsystem to initialize
         except Exception as e:
             raise RuntimeError(f'Failed to invoke netconf subsystem: {type(e).__name__}: {e}')
 
         send_netconf_hello(channel)
+        time.sleep(0.1)  # Give server time to respond
         server_hello = read_netconf_message(channel)
 
         rpc = build_get_config_rpc(filter_xml)
         channel.send((rpc + ']]>]]>\n').encode('utf-8'))
-
+        time.sleep(0.1)
+        
         config_response = read_netconf_message(channel)
 
         return config_response
