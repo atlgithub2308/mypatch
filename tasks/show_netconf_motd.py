@@ -133,15 +133,27 @@ def send_netconf_hello(channel):
     hello += '</hello>\n'
     hello += ']]>]]>\n'
 
-    channel.send(hello.encode('utf-8'))
+    try:
+        channel.send(hello.encode('utf-8'))
+    except Exception as e:
+        raise RuntimeError(f'Failed to send NETCONF hello: {e}')
 
 
 def read_netconf_message(channel):
     data = b''
     while True:
-        chunk = channel.recv(4096)
+        try:
+            chunk = channel.recv(4096)
+        except socket.timeout:
+            raise TimeoutError(f'Timeout waiting for NETCONF message. Received so far: {data[:200]}')
+        
         if not chunk:
-            raise RuntimeError('Connection closed by server - NETCONF subsystem may not be available on the device')
+            # Check if channel is still open
+            if channel.closed or channel.exit_status_ready():
+                raise RuntimeError(f'NETCONF channel closed by server (exit code: {channel.recv_exit_status()}). No response received. Device may not support NETCONF or subsystem not available.')
+            else:
+                raise RuntimeError('Connection closed while reading NETCONF message')
+        
         data += chunk
         if b']]>]]>' in data:
             msg, _ = data.split(b']]>]]>', 1)
@@ -160,6 +172,8 @@ def get_config_netconf(host, port, username, password, timeout, filter_xml=None)
         if not channel:
             raise RuntimeError('Failed to open session channel')
         
+        channel.settimeout(timeout)
+        
         try:
             channel.invoke_subsystem('netconf')
         except Exception as e:
@@ -176,7 +190,7 @@ def get_config_netconf(host, port, username, password, timeout, filter_xml=None)
         return config_response
 
     except Exception as e:
-        raise RuntimeError(f'NETCONF error during get_config: {e}')
+        raise RuntimeError(f'NETCONF error: {e}')
     finally:
         client.close()
 
