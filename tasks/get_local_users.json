@@ -1,0 +1,22 @@
+{
+  "description": "Get local user accounts on Windows",
+  "input_method": "stdin",
+  "remote": true,
+  "parameters": {
+    "filter": {
+      "type": "Optional[String]",
+      "description": "Filter users by name pattern (supports wildcards)",
+      "default": "*"
+    },
+    "include_disabled": {
+      "type": "Boolean",
+      "description": "Include disabled user accounts",
+      "default": true
+    },
+    "detailed": {
+      "type": "Boolean",
+      "description": "Return detailed information including FullName, Description, LastLogon",
+      "default": false
+    }
+  }
+}

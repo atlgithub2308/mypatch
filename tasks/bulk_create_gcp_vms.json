@@ -27,8 +27,8 @@
       "default": "n1-standard-1"
     },
     "image_family": {
-      "type": "Enum['ubuntu-2004-lts', 'ubuntu-2204-lts', 'centos-7', 'centos-8', 'debian-10', 'debian-11', 'windows-server-2019-dc', 'windows-server-2022-dc']",
-      "description": "Image family for the operating system",
+      "type": "Enum['ubuntu-2004-lts', 'ubuntu-2204-lts', 'centos-7', 'centos-8', 'debian-10', 'debian-11', 'windows-server-2019-dc-core', 'windows-server-2019-dc', 'windows-server-2022-dc-core', 'windows-server-2022-dc']",
+      "description": "Image family for the operating system. Note: Windows Server 2022 may not be available in all zones - try Windows Server 2019 if you get 'resource not found' errors",
       "default": "ubuntu-2204-lts"
     },
     "image_project": {
