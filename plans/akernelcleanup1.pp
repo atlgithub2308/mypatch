@@ -1,4 +1,4 @@
-plan mypatch::kernelcleanup1(
+plan mypatch::akernelcleanup1(
   TargetSpec $targets,
 ) {
   $results = {}
