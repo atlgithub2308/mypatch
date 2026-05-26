@@ -1,0 +1,10 @@
+{
+  "description": "Cleanup old kernels on RHEL/CentOS systems",
+  "parameters": {},
+  "implementations": [
+    {
+      "name": "kernelcleanup.sh",
+      "requirements": ["shell"]
+    }
+  ]
+}
